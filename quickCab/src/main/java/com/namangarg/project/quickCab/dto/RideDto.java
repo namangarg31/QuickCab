@@ -17,7 +17,7 @@ public class RideDto {
 
     private Long id;
 
-    private Point pickUpLocation;
+    private Point pickupLocation;
 
     private Point dropOffLocation;
 
@@ -30,6 +30,8 @@ public class RideDto {
     private PaymentMethod paymentMethod;
 
     private RideStatus rideStatus;
+
+    private String otp;
 
     private Double fare;
 
