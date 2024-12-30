@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DriverDto {
 
-    private UserDto userDto;
+    private UserDto user;
     private Double rating;
 
 }
