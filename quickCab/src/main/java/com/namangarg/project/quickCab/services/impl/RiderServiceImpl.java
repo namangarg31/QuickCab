@@ -4,19 +4,21 @@ import com.namangarg.project.quickCab.dto.DriverDto;
 import com.namangarg.project.quickCab.dto.RideDto;
 import com.namangarg.project.quickCab.dto.RideRequestDto;
 import com.namangarg.project.quickCab.dto.RiderDto;
-import com.namangarg.project.quickCab.entities.Driver;
-import com.namangarg.project.quickCab.entities.RideRequest;
-import com.namangarg.project.quickCab.entities.Rider;
-import com.namangarg.project.quickCab.entities.User;
+import com.namangarg.project.quickCab.entities.*;
 import com.namangarg.project.quickCab.entities.enums.RideRequestStatus;
+import com.namangarg.project.quickCab.entities.enums.RideStatus;
 import com.namangarg.project.quickCab.exceptions.ResourceNotFoundException;
 import com.namangarg.project.quickCab.repositories.RideRequestRepository;
 import com.namangarg.project.quickCab.repositories.RiderRepository;
+import com.namangarg.project.quickCab.services.DriverService;
+import com.namangarg.project.quickCab.services.RideService;
 import com.namangarg.project.quickCab.services.RiderService;
 import com.namangarg.project.quickCab.strategies.RideStrategyManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +33,8 @@ public class RiderServiceImpl implements RiderService {
     private final RideStrategyManager rideStrategyManager;
     private final RideRequestRepository rideRequestRepository;
     private final RiderRepository riderRepository;
+    private final RideService rideService;
+    private final DriverService driverService;
 
     @Override
     @Transactional
@@ -55,7 +59,21 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public RideDto cancelRide(Long rideId) {
-        return null;
+        Rider rider = getCurrentRider();
+        Ride ride = rideService.getRideById(rideId);
+
+        if(!rider.equals(ride.getRider())) {
+            throw new RuntimeException(("Rider does not own this ride with id: "+rideId));
+        }
+
+        if(!ride.getRideStatus().equals(RideStatus.CONFIRMED)) {
+            throw new RuntimeException("Ride cannot be cancelled, invalid status: "+ride.getRideStatus());
+        }
+
+        Ride savedRide = rideService.updateRideStatus(ride, RideStatus.CANCELLED);
+        driverService.updateDriverAvailability(ride.getDriver(), true);
+
+        return modelMapper.map(savedRide, RideDto.class);
     }
 
     @Override
@@ -65,12 +83,16 @@ public class RiderServiceImpl implements RiderService {
 
     @Override
     public RiderDto getMyProfile() {
-        return null;
+        Rider currentRider = getCurrentRider();
+        return modelMapper.map(currentRider, RiderDto.class);
     }
 
     @Override
-    public List<RideDto> getAllMyRides() {
-        return List.of();
+    public Page<RideDto> getAllMyRides(PageRequest pageRequest) {
+        Rider currentRider = getCurrentRider();
+        return rideService.getAllRidesOfRider(currentRider, pageRequest).map(
+                ride -> modelMapper.map(ride, RideDto.class)
+        );
     }
 
     @Override
@@ -90,4 +112,5 @@ public class RiderServiceImpl implements RiderService {
                 "Rider not found with id: "+1
         ));
     }
+
 }

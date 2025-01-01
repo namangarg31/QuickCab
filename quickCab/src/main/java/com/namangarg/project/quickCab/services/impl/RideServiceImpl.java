@@ -4,6 +4,7 @@ import com.namangarg.project.quickCab.dto.RideRequestDto;
 import com.namangarg.project.quickCab.entities.Driver;
 import com.namangarg.project.quickCab.entities.Ride;
 import com.namangarg.project.quickCab.entities.RideRequest;
+import com.namangarg.project.quickCab.entities.Rider;
 import com.namangarg.project.quickCab.entities.enums.RideRequestStatus;
 import com.namangarg.project.quickCab.entities.enums.RideStatus;
 import com.namangarg.project.quickCab.exceptions.ResourceNotFoundException;
@@ -25,11 +26,13 @@ public class RideServiceImpl implements RideService {
     private final RideRepository rideRepository;
     private final RideRequestService rideRequestService;
     private final ModelMapper modelMapper;
+
     @Override
     public Ride getRideById(Long rideId) {
         return rideRepository.findById(rideId)
                 .orElseThrow(() -> new ResourceNotFoundException("Ride not found with id: "+rideId));
     }
+
 
     @Override
     public Ride createNewRide(RideRequest rideRequest, Driver driver) {
@@ -52,13 +55,13 @@ public class RideServiceImpl implements RideService {
     }
 
     @Override
-    public Page<Ride> getAllRidesOfRider(Long riderId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfRider(Rider rider, PageRequest pageRequest) {
+        return rideRepository.findByRider(rider, pageRequest);
     }
 
     @Override
-    public Page<Ride> getAllRidesOfDriver(Long driverId, PageRequest pageRequest) {
-        return null;
+    public Page<Ride> getAllRidesOfDriver(Driver driver, PageRequest pageRequest) {
+        return rideRepository.findByDriver(driver, pageRequest);
     }
 
     private String generateRandomOTP() {

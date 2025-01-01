@@ -3,11 +3,17 @@ package com.namangarg.project.quickCab.entities;
 import com.namangarg.project.quickCab.entities.enums.TransactionMethod;
 import com.namangarg.project.quickCab.entities.enums.TransactionType;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
+@Builder
 public class WalletTransaction {
 
     @Id
@@ -20,7 +26,7 @@ public class WalletTransaction {
 
     private TransactionMethod transactionMethod;
 
-    @OneToOne
+    @ManyToOne
     private Ride ride;
 
     private String transactionId;
@@ -30,5 +36,4 @@ public class WalletTransaction {
 
     @CreationTimestamp
     private LocalDateTime timeStamp;
-
 }
