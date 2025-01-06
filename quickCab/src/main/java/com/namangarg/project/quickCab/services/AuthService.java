@@ -8,6 +8,6 @@ public interface AuthService {
 
     String login(String email, String password);
     UserDto signup(SignupDto signUpDto);
-    DriverDto onboardNewDriver(Long userId);
+    DriverDto onboardNewDriver(Long userId, String vehicleId);
 
 }

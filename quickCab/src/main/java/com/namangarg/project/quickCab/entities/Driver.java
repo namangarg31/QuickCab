@@ -1,13 +1,18 @@
 package com.namangarg.project.quickCab.entities;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(indexes = {
+        @Index(name = "idx_driver_vehicle_id", columnList = "vehicleId")
+})
 public class Driver {
 
     @Id
@@ -15,7 +20,7 @@ public class Driver {
     private Long id;
 
     @OneToOne
-    @JoinColumn(name = "userId")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private Double rating;
@@ -25,6 +30,5 @@ public class Driver {
     private String vehicleId;
 
     @Column(columnDefinition = "Geometry(Point, 4326)")
-    Point currentLocation;
-
+    private Point currentLocation;
 }
