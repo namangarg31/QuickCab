@@ -1,0 +1,28 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto17
+    commands:
+      - echo Installing Maven...
+  pre_build:
+    commands:
+      - echo Logging in to Docker hub...
+      - echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+  build:
+    commands:
+      - echo Changing directory to 'quickCab'...
+      - cd quickCab  # Change to the 'quickCab' directory
+      - echo Building, Testing, and packaging the application in 'quickCab'...
+      - mvn package  # Run Maven commands in the 'quickCab' directory
+  post_build:
+    commands:
+      - echo Build, Testing, and packaging completed.
+artifacts:
+  files:
+    - quickCab/target/*.jar  # Include the artifacts from the 'quickCab' directory
+  discard-paths: yes
+cache:
+  paths:
+    - '/root/.m2/**/*'
