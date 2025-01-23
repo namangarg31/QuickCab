@@ -20,7 +20,7 @@ Java, Spring Boot, Spring Security, JPA and Hibernate, Mockito, PostgreSQL and A
 
 Deployment is managed using AWS Elastic Beanstalk for application hosting, AWS CodePipeline for continuous integration and deployment (CI/CD), and AWS RDS for PostgreSQL database management
 
-**Swagger Live Link :** http://quickcab.ap-south-1.elasticbeanstalk.com/swagger-ui/index.html/
+**Swagger Live Link :** http://quickcab.ap-south-1.elasticbeanstalk.com/swagger-ui/index.html#/
 
 
 ## UML Diagram
