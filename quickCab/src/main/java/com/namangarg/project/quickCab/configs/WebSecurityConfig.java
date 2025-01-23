@@ -29,6 +29,7 @@ public class WebSecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/").permitAll()
                         .requestMatchers(PUBLIC_ROUTES).permitAll()
                         .requestMatchers(SWAGGER_URLS).permitAll()
                         .anyRequest().authenticated()
