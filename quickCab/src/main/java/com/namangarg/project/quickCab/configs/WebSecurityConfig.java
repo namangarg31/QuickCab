@@ -19,6 +19,7 @@ public class WebSecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
     private static final String[] PUBLIC_ROUTES= {"/auth/**"};
+    private static final String[] SWAGGER_URLS = {"/swagger-ui/**", "/v3/api-docs/**", "/swagger-resources/**", "/webjars/**"};
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
@@ -29,6 +30,7 @@ public class WebSecurityConfig {
                 .csrf(csrfConfig -> csrfConfig.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(PUBLIC_ROUTES).permitAll()
+                        .requestMatchers(SWAGGER_URLS).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
